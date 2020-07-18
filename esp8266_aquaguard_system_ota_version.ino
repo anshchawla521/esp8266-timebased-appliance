@@ -8,7 +8,7 @@ const char *password = "acmcacdc";
 unsigned long pt = 0;
 int a;
 
-#define relaypin 2
+#define relaypin 5
 WiFiUDP ntpUDP;
 
 
@@ -16,9 +16,9 @@ NTPClient t(ntpUDP, "pool.ntp.org", 19800);
 
 void setup() {
   Serial.begin(9600);
-  
+
   pinMode(relaypin , OUTPUT);
-  
+
   Serial.println("Booting");
   WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, password);
@@ -90,8 +90,8 @@ void loop() {
     pt = ct;
     t.update();
 
-    
-    a=t.getHours();
+
+    a = t.getHours();
     Serial.print(a);
     Serial.print(":");
     Serial.print(t.getMinutes());
@@ -99,14 +99,14 @@ void loop() {
     Serial.println(t.getSeconds());
 
 
-    if (((t.getHours() >= 18 && t.getHours() <= 20) || ( t.getHours() >= 5 && t.getHours() <= 8 )) && digitalRead(relaypin) == HIGH)
+    if (((t.getHours() >= 18 && t.getHours() <= 20) || ( t.getHours() >= 5 && t.getHours() <= 8 )) && digitalRead(relaypin) == LOW)
     {
-      digitalWrite(relaypin , LOW);
+      digitalWrite(relaypin , HIGH);
       Serial.println("on");
     }
-    else if (digitalRead(relaypin) == LOW && !((t.getHours() >= 18 && t.getHours() <= 20) || ( t.getHours() >= 5 && t.getHours() <= 8 )))
+    else if (digitalRead(relaypin) == HIGH && !((t.getHours() >= 18 && t.getHours() <= 20) || ( t.getHours() >= 5 && t.getHours() <= 8 )))
     {
-      digitalWrite(relaypin, HIGH);
+      digitalWrite(relaypin, LOW);
       Serial.println("off");
     }
 
